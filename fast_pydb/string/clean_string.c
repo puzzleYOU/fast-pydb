@@ -109,11 +109,18 @@ inline void fillDestinationString(
 
 PyObject *processWhitespaces(const char *original, const Py_ssize_t size)
 {
+    // We allocate the destination buffer. Note that whenever any heap
+    // allocation is done, the buffer must ALWAYS be freed later! Python
+    // cannot "know" whether the value transferred to the interpreter is
+    // heap- or stack-allocated, so Python won't do anything and we are
+    // responsible for freeing up ourselves!
     char *destination = calloc(size + 1, sizeof(char));
 
     if (!destination)
     {
-        PyErr_SetString(PyExc_SystemError, "could not allocate buffer");
+        PyErr_SetString(
+            PyExc_SystemError,
+            "insufficient memory to allocate internal buffer");
         return NULL;
     }
 
@@ -127,7 +134,10 @@ PyObject *processWhitespaces(const char *original, const Py_ssize_t size)
 
     fillDestinationString(original, destination, &loopState);
 
-    return PyUnicode_FromString(destination);
+    // Transfer destination value to python and free up our internal buffer.
+    PyObject *pythonResult = PyUnicode_FromString(destination);
+    free(destination);
+    return pythonResult;
 }
 
 
