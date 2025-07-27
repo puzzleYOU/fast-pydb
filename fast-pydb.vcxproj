@@ -199,6 +199,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="fast_pydb\string\clean_string.h" />
+    <ClInclude Include="fast_pydb\_common\macros.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="test.bat" />

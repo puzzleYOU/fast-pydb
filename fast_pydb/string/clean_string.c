@@ -1,5 +1,6 @@
 #include <stdbool.h>
 
+#include "../_common/macros.h"
 #include "clean_string.h"
 
 
@@ -72,6 +73,8 @@ PyObject *processWhitespaces(const char *original, Py_ssize_t size)
 
 PyObject *clean_string(PyObject *module, PyObject *args)
 {
+    UNUSED(module);
+
     const char* original;
     Py_ssize_t bufferSize;
 
