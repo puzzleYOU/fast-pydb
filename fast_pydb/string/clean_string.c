@@ -107,7 +107,7 @@ inline void fillDestinationString(
     destination[loopState->destinationOffset] = 0;
 }
 
-PyObject *processWhitespaces(const char *original, Py_ssize_t size)
+PyObject *processWhitespaces(const char *original, const Py_ssize_t size)
 {
     char *destination = calloc(size + 1, sizeof(char));
 
@@ -131,15 +131,18 @@ PyObject *processWhitespaces(const char *original, Py_ssize_t size)
 }
 
 
-PyObject *clean_string(PyObject *module, PyObject *args)
+PyObject *clean_string(const PyObject *module, const PyObject *args)
 {
     UNUSED(module);
 
     const char* original;
-    Py_ssize_t bufferSize;
+    const Py_ssize_t bufferSize = -1;
 
     // Python runtime turns this into 'TypeError'
-    if (!PyArg_ParseTuple(args, "z#", &original, &bufferSize))
+    if (!PyArg_ParseTuple((PyObject *) args,
+                          "z#",
+                          &original,
+                          &bufferSize))
     {
         return NULL;
     }
