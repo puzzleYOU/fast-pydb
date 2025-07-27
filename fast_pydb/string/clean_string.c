@@ -142,6 +142,10 @@ PyObject *clean_string(const PyObject *module, const PyObject *args)
     // the argument count and type constraints are not met:
     // 
     //   def clean_string(original: str | None) -> str | None: ...
+    //
+    // 'const char *original' on C side is
+    // - a regular '\0'-terminated C string, if Python 'original' is not None
+    // - NULL, if Python 'original' is None
     if (!PyArg_ParseTuple((PyObject *) args,
                           "z#",
                           &original,
