@@ -138,7 +138,10 @@ PyObject *clean_string(const PyObject *module, const PyObject *args)
     const char* original;
     const Py_ssize_t bufferSize = -1;
 
-    // Python runtime turns this into 'TypeError'
+    // This effectively exposes following signature and raises TypeError in case
+    // the argument count and type constraints are not met:
+    // 
+    //   def clean_string(original: str | None) -> str | None: ...
     if (!PyArg_ParseTuple((PyObject *) args,
                           "z#",
                           &original,
