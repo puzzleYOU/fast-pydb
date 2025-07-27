@@ -3,7 +3,8 @@
 #include "clean_string.h"
 
 
-struct LoopState {
+struct LoopState
+{
     int originalOffset;
     int destinationOffset;
     bool trailingWhitespacesLeft;
@@ -75,15 +76,18 @@ PyObject *clean_string(PyObject *module, PyObject *args)
     Py_ssize_t bufferSize;
 
     // Python runtime turns this into 'TypeError'
-    if (!PyArg_ParseTuple(args, "z#", &original, &bufferSize)) {
+    if (!PyArg_ParseTuple(args, "z#", &original, &bufferSize))
+    {
         return NULL;
     }
 
-    if (original == NULL) {
+    if (original == NULL)
+    {
         return Py_None;
     }
 
-    if (bufferSize == 0) {
+    if (bufferSize == 0)
+    {
         return PyUnicode_FromString("");
     }
 
