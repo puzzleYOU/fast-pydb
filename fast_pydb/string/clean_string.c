@@ -155,10 +155,5 @@ PyObject *clean_string(const PyObject *module, const PyObject *args)
         return Py_None;
     }
 
-    if (bufferSize == 0)
-    {
-        return PyUnicode_FromString("");
-    }
-
     return processWhitespaces(original, bufferSize);
 }
