@@ -141,7 +141,7 @@ PyObject *processWhitespaces(const char *original, const Py_ssize_t size)
 }
 
 
-PyObject *clean_string(const PyObject *module, const PyObject *args)
+PyObject *clean_string(PyObject *module, PyObject *args)
 {
     UNUSED(module);
 
