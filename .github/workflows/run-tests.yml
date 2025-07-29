@@ -5,7 +5,12 @@ on: pull_request
 jobs:
   run-tests:
     runs-on: ubuntu-latest
+    env:
+      REGISTRY_AUTH_FILE: ${{ github.workspace }}/auth.json
     steps:
+      - name: Create dummy auth file
+        # this may be empty as we are fetching from public docker registry.
+        run: echo '{}' > auth.json
       - name: Check out repository
         uses: actions/checkout@v3
         with:
