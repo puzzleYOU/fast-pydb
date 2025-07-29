@@ -2,15 +2,10 @@ help:
         just --list
 
 build:
-        CFLAGS="-O0 -g -Wno-cpp" python setup.py build_ext
+        python setup.py build_ext --inplace
 
 test:
-        just build
-        # unittests with valgrind
-        valgrind --tool=memcheck \
-        --leak-check=full \
-        --show-leak-kinds=definite \
-        --track-origins=yes \
-        python tests/doctests.py
-        # benchmarks without (slow) memory tracer. Note this is a debug build!
-        python tests/benchmark.py
+        nix build ".#testOciImage"
+        nix eval --raw ".#testOciImage" | xargs docker load -i
+        docker run -it --volume "$PWD:/code" \
+                fast-pydb-python313-debug:latest /bin/bash tests/runner.sh

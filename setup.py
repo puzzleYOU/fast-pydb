@@ -15,6 +15,8 @@ extensions_config = {
             ],
             "unix": [
                 # treat warnings as errors
+                "-Wno-cpp",
+                "-O0",
                 "-Werror",
                 "-Wno-missing-braces",
             ],

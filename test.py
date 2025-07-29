@@ -39,5 +39,5 @@ if __name__ == '__main__':
     c_impl = bench("C implementation", fast_pydb.string.clean_string)
     python_old = bench("Python, old (very slow)", python_old_clean_string)
     python_opt = bench("Python, optimized", python_optimized_clean_string)
-    
+
     assert c_impl < python_opt < python_old
