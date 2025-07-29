@@ -4,10 +4,13 @@ help:
 build:
         CFLAGS="-O0 -g -Wno-cpp" python setup.py build_ext
 
-leak-check:
+test:
         just build
+        # unittests with valgrind
         valgrind --tool=memcheck \
         --leak-check=full \
         --show-leak-kinds=definite \
         --track-origins=yes \
-        python test.py
+        python tests/doctests.py
+        # benchmarks without (slow) memory tracer. Note this is a debug build!
+        python tests/benchmark.py
