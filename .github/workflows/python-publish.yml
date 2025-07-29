@@ -25,5 +25,7 @@ jobs:
         pip install setuptools
     - name: Build package
       run: python setup.py build
+      with:
+        packages-dir: build/
     - name: Publish package
       uses: pypa/gh-action-pypi-publish@release/v1
