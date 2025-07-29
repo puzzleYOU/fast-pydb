@@ -38,7 +38,7 @@ typedef struct LoopState
 } LoopState;
 
 
-inline void fillDestinationString(
+void fillDestinationString(
     const char *original,
     char *destination,
     LoopState *loopState) 
