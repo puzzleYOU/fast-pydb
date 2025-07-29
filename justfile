@@ -4,6 +4,11 @@ help:
 build:
         python setup.py build_ext --inplace
 
+rebuild:
+        rm -rf build
+        rm fast_pydb.*.so
+        just build
+
 test:
         nix build ".#testOciImage"
         nix eval --raw ".#testOciImage" | xargs docker load -i

@@ -31,10 +31,11 @@ typedef struct LoopState
     bool leadingWhitespacesLeft;
 
     /*
-     * Shorthand: Is the current character a whitespace?
+     * Shorthands for what the current character is.
      * This flag is meant to be set first when re-entering the loop.
      */
     bool isCurrentCharWhitespace;
+    bool isCurrentCharLineBreak;
 } LoopState;
 
 
@@ -50,14 +51,18 @@ void fillDestinationString(
      */
     while (loopState->originalOffset < loopState->originalSize)
     {
-        // (0): initialize shorthand 'isCurrentCharWhitespace'
+        // (0): initialize shorthands
         loopState->isCurrentCharWhitespace =
             original[loopState->originalOffset] == ' ';
+        loopState->isCurrentCharLineBreak =
+            original[loopState->originalOffset] == '\r'
+            || original[loopState->originalOffset] == '\n';
 
         // (1): We walk through the original string without writing anything to
         // destination to just skip all leading whitespaces.
-        if (loopState->isCurrentCharWhitespace
-            && loopState->leadingWhitespacesLeft)
+        if (loopState->leadingWhitespacesLeft
+            && (loopState->isCurrentCharWhitespace
+                || loopState->isCurrentCharLineBreak))
         {
             loopState->originalOffset++;
             continue;
@@ -132,6 +137,16 @@ PyObject *processWhitespaces(const char *original, const Py_ssize_t size)
     };
 
     fillDestinationString(original, destination, &loopState);
+
+    // We must walk a bit back as there still may be trailing specials.
+    // First, trim all trailing newlines...
+    while (destination[--loopState.destinationOffset] == '\n') {
+      destination[loopState.destinationOffset] = '\0';
+    }
+    // ... and only then remove the possible remaining trailing whitespace.
+    while (destination[loopState.destinationOffset] == ' ') {
+      destination[loopState.destinationOffset] = '\0';
+    }
 
     // Transfer destination value to python and free up our internal buffer.
     PyObject *pythonResult = PyUnicode_FromString(destination);
