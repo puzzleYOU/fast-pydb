@@ -36,6 +36,9 @@ def bench(label: str, impl: Callable) -> float:
 if __name__ == '__main__':
     doctest.testmod(fast_pydb.string)
 
+    actual = fast_pydb.string.clean_string("   \n\n  a\n\nb\n\nc  \n  ")
+    assert "a\n\nb\n\nc" == actual, repr(actual)
+
     c_impl = bench("C implementation", fast_pydb.string.clean_string)
     python_old = bench("Python, old (very slow)", python_old_clean_string)
     python_opt = bench("Python, optimized", python_optimized_clean_string)
