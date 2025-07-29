@@ -41,11 +41,11 @@ typedef struct LoopState
 void fillDestinationString(
     const char *original,
     char *destination,
-    LoopState *loopState) 
+    LoopState *loopState)
 {
     /*
      * Strips duplicate whitespaces and writes them into 'destination'.
-     * 
+     *
      * The steps are on intent not flowing in order, e.g. (4) following (2).
      */
     while (loopState->originalOffset < loopState->originalSize)
@@ -147,7 +147,7 @@ PyObject *clean_string(PyObject *module, PyObject *args)
 
     // This effectively exposes following signature and raises TypeError in case
     // the argument count and type constraints are not met:
-    // 
+    //
     //   def clean_string(original: str | None) -> str | None: ...
     //
     // 'const char *original' on C side is
