@@ -138,6 +138,16 @@ PyObject *processWhitespaces(const char *original, const Py_ssize_t size)
 
     fillDestinationString(original, destination, &loopState);
 
+    // We must walk a bit back as there still may be trailing specials.
+    // First, trim all trailing newlines...
+    while (destination[--loopState.destinationOffset] == '\n') {
+      destination[loopState.destinationOffset] = '\0';
+    }
+    // ... and only then remove the possible remaining trailing whitespace.
+    while (destination[loopState.destinationOffset] == ' ') {
+      destination[loopState.destinationOffset] = '\0';
+    }
+
     // Transfer destination value to python and free up our internal buffer.
     PyObject *pythonResult = PyUnicode_FromString(destination);
     free(destination);
