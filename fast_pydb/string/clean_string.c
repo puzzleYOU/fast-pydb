@@ -31,10 +31,11 @@ typedef struct LoopState
     bool leadingWhitespacesLeft;
 
     /*
-     * Shorthand: Is the current character a whitespace?
+     * Shorthands for what the current character is.
      * This flag is meant to be set first when re-entering the loop.
      */
     bool isCurrentCharWhitespace;
+    bool isCurrentCharLineBreak;
 } LoopState;
 
 
@@ -50,14 +51,18 @@ void fillDestinationString(
      */
     while (loopState->originalOffset < loopState->originalSize)
     {
-        // (0): initialize shorthand 'isCurrentCharWhitespace'
+        // (0): initialize shorthands
         loopState->isCurrentCharWhitespace =
             original[loopState->originalOffset] == ' ';
+        loopState->isCurrentCharLineBreak =
+            original[loopState->originalOffset] == '\r'
+            || original[loopState->originalOffset] == '\n';
 
         // (1): We walk through the original string without writing anything to
         // destination to just skip all leading whitespaces.
-        if (loopState->isCurrentCharWhitespace
-            && loopState->leadingWhitespacesLeft)
+        if (loopState->leadingWhitespacesLeft
+            && (loopState->isCurrentCharWhitespace
+                || loopState->isCurrentCharLineBreak))
         {
             loopState->originalOffset++;
             continue;
