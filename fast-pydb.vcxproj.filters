@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="string">
+      <UniqueIdentifier>{c88a7db0-1c4a-437e-9e88-77a79a2dc958}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_common">
+      <UniqueIdentifier>{e6999f71-b4ab-4ddb-bce1-c5aa2d9abacb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="fast_pydb\string\clean_string.c">
+      <Filter>string</Filter>
+    </ClCompile>
+    <ClCompile Include="fast_pydb\string\module.h">
+      <Filter>string</Filter>
+    </ClCompile>
+    <ClCompile Include="fast_pydb\main.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="fast_pydb\string\clean_string.h">
+      <Filter>string</Filter>
+    </ClInclude>
+    <ClInclude Include="fast_pydb\_common\macros.h">
+      <Filter>_common</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test.bat" />
+    <None Include="test.py" />
+  </ItemGroup>
+</Project>
