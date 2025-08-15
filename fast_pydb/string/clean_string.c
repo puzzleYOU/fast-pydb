@@ -12,12 +12,12 @@ typedef struct {
     /*
      * The original string position which will be read from next.
      */
-    int originalOffset;
+    unsigned int originalOffset;
 
     /*
      * The destination string position which will be written to next.
      */
-    int destinationOffset;
+    unsigned int destinationOffset;
 
     /*
      * The original string size. Immutable.
