@@ -22,7 +22,7 @@ typedef struct {
     /*
      * The original string size. Immutable.
      */
-    const Py_ssize_t originalSize;
+    const uint originalSize;
 
     /*
      * Indicates that not all leading whitespaces have been visited.
@@ -38,7 +38,7 @@ typedef struct {
 } LoopState;
 
 
-void fillDestinationString(
+void fillDestinationStringWithoutLeadingEntities(
     const char *original,
     char *destination,
     LoopState *loopState)
@@ -110,24 +110,32 @@ void fillDestinationString(
     destination[loopState->destinationOffset] = 0;
 }
 
-PyObject *processWhitespaces(const char *original, const Py_ssize_t size)
+void trimAllTrailingNewlines(char *destination, LoopState* loopState)
 {
-    // We allocate the destination buffer. Note that whenever any heap
-    // allocation is done, the buffer must ALWAYS be freed later! Python
-    // cannot "know" whether the value transferred to the interpreter is
-    // heap- or stack-allocated, so Python won't do anything and we are
-    // responsible for freeing up ourselves!
-    char *destination = calloc(size + 1, sizeof(char));
-
-    if (!destination)
-    {
-        PyErr_SetString(
-            PyExc_SystemError,
-            "insufficient memory to allocate internal buffer");
-        return NULL;
+    // We must walk a bit back as there still may be trailing specials.
+    // First, trim all trailing newlines...
+    while (destination[--loopState->destinationOffset] == '\n') {
+      destination[loopState->destinationOffset] = '\0';
     }
+}
 
-    LoopState loopState = {
+void trimAllTrailingWhitespaces(char *destination, const LoopState* loopState)
+{
+    // ... and only then remove the possible remaining trailing whitespace.
+    while (destination[loopState->destinationOffset] == ' ') {
+      destination[loopState->destinationOffset] = '\0';
+    }
+}
+
+/*
+ * Cleans the source string according following rules:
+ * - redundant spaces
+ * - trailing and leading whitespaces
+ * - trailing and leading newlines
+ */
+void cleanString(const char *source, char *destination, const uint size)
+{
+    LoopState state = {
         .originalOffset = 0,
         .destinationOffset = 0,
         .originalSize = size,
@@ -135,50 +143,7 @@ PyObject *processWhitespaces(const char *original, const Py_ssize_t size)
         .isCurrentCharWhitespace = false,
     };
 
-    fillDestinationString(original, destination, &loopState);
-
-    // We must walk a bit back as there still may be trailing specials.
-    // First, trim all trailing newlines...
-    while (destination[--loopState.destinationOffset] == '\n') {
-      destination[loopState.destinationOffset] = '\0';
-    }
-    // ... and only then remove the possible remaining trailing whitespace.
-    while (destination[loopState.destinationOffset] == ' ') {
-      destination[loopState.destinationOffset] = '\0';
-    }
-
-    // Transfer destination value to python and free up our internal buffer.
-    PyObject *pythonResult = PyUnicode_FromString(destination);
-    free(destination);
-    return pythonResult;
-}
-
-
-PyObject *clean_string(PyObject *module, PyObject *args)
-{
-    const char* original;
-    const Py_ssize_t bufferSize = -1;
-
-    // This effectively exposes following signature and raises TypeError in case
-    // the argument count and type constraints are not met:
-    //
-    //   def clean_string(original: str | None) -> str | None: ...
-    //
-    // 'const char *original' on C side is
-    // - a regular '\0'-terminated C string, if Python 'original' is not None
-    // - NULL, if Python 'original' is None
-    if (!PyArg_ParseTuple((PyObject *) args,
-                          "z#",
-                          &original,
-                          &bufferSize))
-    {
-        return NULL;
-    }
-
-    if (original == NULL)
-    {
-        return Py_None;
-    }
-
-    return processWhitespaces(original, bufferSize);
+    fillDestinationStringWithoutLeadingEntities(source, destination, &state);
+    trimAllTrailingNewlines(destination, &state);
+    trimAllTrailingWhitespaces(destination, &state);
 }

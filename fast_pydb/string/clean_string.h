@@ -1,3 +1,3 @@
-#include <Python.h>
+typedef unsigned int uint;
 
-PyObject *clean_string(PyObject *module, PyObject *args);
+void cleanString(const char *source, char *destination, const uint size);
