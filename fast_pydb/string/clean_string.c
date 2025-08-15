@@ -8,8 +8,7 @@
  * Each field description relates to "this is the variable's state when
  * entering the loop".
  */
-typedef struct LoopState
-{
+typedef struct {
     /*
      * The original string position which will be read from next.
      */
