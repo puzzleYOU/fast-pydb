@@ -8,10 +8,12 @@ jobs:
   deploy:
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
         python-version: ['313', '314']
 
-    runs-on: ${{ matrix.os}}
+    # NOTE this only runs on ubuntu because
+    # 'This action is only able to run under GNU/Linux environments'
+    # ~ gh-action-pypi-publish 1.13.0, 29.12.2025
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
