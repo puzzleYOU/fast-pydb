@@ -40,7 +40,7 @@ class ExtraCompileArgsExtension(build_ext):
 
 setup(
     name="fast_pydb",
-    version="1.0.0a4",
+    version="1.0.0a5",
     license="MIT",
 
     description="fast implementations of various utility functions",

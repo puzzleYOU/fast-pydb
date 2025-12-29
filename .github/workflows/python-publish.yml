@@ -27,7 +27,6 @@ jobs:
       env:
         CIBW_BUILD: cp${{matrix.python-version}}-*
     - name: Publish package
-      uses: actions/upload-artifact@v6
+      uses: pypa/gh-action-pypi-publish@release/v1
       with:
-        name: wheels
-        path: wheelhouse
+        packages-dir: dist/
