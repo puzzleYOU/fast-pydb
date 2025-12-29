@@ -28,6 +28,8 @@ jobs:
       uses: pypa/cibuildwheel@v3.3.0
       env:
         CIBW_BUILD: cp${{matrix.python-version}}-*
+      with:
+        output-dir: dist/
     - name: Publish package
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
