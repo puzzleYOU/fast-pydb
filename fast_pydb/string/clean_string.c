@@ -169,6 +169,10 @@ PyObject *clean_string(PyObject *module, PyObject *args)
     // 'const char *original' on C side is
     // - a regular '\0'-terminated C string, if Python 'original' is not None
     // - NULL, if Python 'original' is None
+    //
+    // using z# uses a "borrowed" underlying buffer: It is managed by the
+    // corresponding Python object and shares its lifetime, i.e. should be
+    // deallocated when 'args' is freed.
     if (!PyArg_ParseTuple((PyObject *) args,
                           "z#",
                           &original,
