@@ -140,7 +140,8 @@ PyObject *processWhitespaces(const char *original, const Py_ssize_t size)
 
     // We must walk a bit back as there still may be trailing specials.
     // First, trim all trailing newlines...
-    while (destination[--loopState.destinationOffset] == '\n') {
+    while (loopState.destinationOffset > 0
+           && destination[--loopState.destinationOffset] == '\n') {
       destination[loopState.destinationOffset] = '\0';
     }
     // ... and only then remove the possible remaining trailing whitespace.
@@ -168,6 +169,10 @@ PyObject *clean_string(PyObject *module, PyObject *args)
     // 'const char *original' on C side is
     // - a regular '\0'-terminated C string, if Python 'original' is not None
     // - NULL, if Python 'original' is None
+    //
+    // using z# uses a "borrowed" underlying buffer: It is managed by the
+    // corresponding Python object and shares its lifetime, i.e. should be
+    // deallocated when 'args' is freed.
     if (!PyArg_ParseTuple((PyObject *) args,
                           "z#",
                           &original,
